@@ -6,21 +6,18 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-// add second page
-// route name()
-Route::get('/second', function () {
-    return view('second');
-});
+//lab activity sample routes
+Route::get('/products', function () {
+    return view('products.index');
+})->name('products.index');
 
-Route::get('/third', function () {
-    return view('third');
-});
 
-//lab activity sample
-Route::get('products', function () {
-    return view('products');
-})->name('products');
+Route::get('/categories', function (){
+    return view('categories.index');
+})->name('categories.index');
 
 Route::get('about', function () {
     return view('about');
 })->name('about');
+
+

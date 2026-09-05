@@ -9,6 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     {{-- fontawesome icons --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    {{-- alpine --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="flex min-h-screen flex-col bg-slate-100 text-slate-900">
@@ -30,11 +32,8 @@
                     <li><a href="{{ url('/about') }}" class="block rounded-lg px-4 py-2 transition hover:bg-white/15">About</a></li>
                 </ul>
             </nav>
-
         </div>
     </header>
-
-    
 
     {{-- Main Content --}}
     <main class="container mx-auto flex-1 px-6 py-10">

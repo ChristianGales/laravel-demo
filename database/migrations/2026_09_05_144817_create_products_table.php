@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('product_name');
             $table->enum('product_category', ['Electronics', 'Clothing', 'Books', 'Home & Kitchen']);
-            $table->enum('product_status', ['In Stock', 'Out of Stock', 'Low Stock']);
+            $table->integer('product_stock');
             $table->decimal('product_price', 8, 2);
             $table->string('product_description')->nullable();
             $table->timestamps();

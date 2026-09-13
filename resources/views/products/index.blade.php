@@ -27,6 +27,28 @@
                 class="w-full rounded-lg border border-slate-300 px-4 py-2 outline-none focus:border-blue-500 sm:max-w-sm">
         </div>
 
+        <!-- Success | Error Message -->
+        @if (session('success'))
+            <div
+                x-data="{ show: true }"
+                x-show="show"
+                x-transition
+                class="mb-6 flex items-center justify-between rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-700">
+
+                <span class="text-sm font-medium">
+                    {{ session('success') }}
+                </span>
+
+                <button
+                    type="button"
+                    @click="show = false"
+                    class="ml-4 text-lg font-semibold text-green-700 hover:text-green-900">
+                    &times;
+                </button>
+
+            </div>
+        @endif
+
         {{-- Product Table --}}
         <div class="overflow-x-auto rounded-lg border border-slate-200">
             <table class="w-full text-left text-sm">
@@ -42,28 +64,70 @@
                 </thead>
 
                 <tbody class="divide-y divide-slate-200">
-                    <tr class="hover:bg-slate-50">
-                        <td class="px-5 py-4 font-medium">Wireless Mouse</td>
-                        <td class="px-5 py-4">Accessories</td>
-                        <td class="px-5 py-4">₱650.00</td>
-                        <td class="px-5 py-4">25</td>
-                        <td class="px-5 py-4">
-                            <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
-                                In Stock
-                            </span>
-                        </td>
-                        <td class="px-5 py-4">
-                            <div class="flex justify-center gap-2">
-                                <a href="{{ route('products.edit') }}" class="text-blue-600 hover:underline">Edit</a>
-                                <button
-                                    type="button"
-                                    @click="showDeleteModal = true; productToDelete = 'Wireless Mouse'"
-                                    class="text-red-600 hover:underline">
-                                    Delete
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
+
+                    @forelse ($products as $product)
+
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-5 py-4 font-medium">
+                                {{ $product->product_name }}
+                            </td>
+
+                            <td class="px-5 py-4">
+                                {{ $product->product_category }}
+                            </td>
+
+                            <td class="px-5 py-4">
+                                ₱{{ number_format($product->product_price, 2) }}
+                            </td>
+
+                            <td class="px-5 py-4">
+                                {{ $product->product_stock }}
+                            </td>
+
+                            <td class="px-5 py-4">
+                                @if ($product->product_stock == 0)
+                                    <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
+                                        Out of Stock
+                                    </span>
+
+                                @elseif ($product->product_stock < 10)
+                                    <span class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700">
+                                        Low Stock
+                                    </span>
+
+                                @else
+                                    <span class="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                                        In Stock
+                                    </span>
+                                @endif
+                            </td>
+
+                            <td class="px-5 py-4">
+                                <div class="flex justify-center gap-2">
+                                    <a href="#" class="text-blue-600 hover:underline">
+                                        Edit
+                                    </a>
+
+                                    <button
+                                        type="button"
+                                        @click="showDeleteModal = true; productToDelete = '{{ $product->product_name }}'"
+                                        class="text-red-600 hover:underline">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                    @empty
+
+                        <tr>
+                            <td colspan="5" class="px-5 py-8 text-center text-slate-500">
+                                No products found.
+                            </td>
+                        </tr>
+
+                    @endforelse
+
                 </tbody>
             </table>
         </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Product;
 class ProductController extends Controller
 {
     /**
@@ -12,7 +13,9 @@ class ProductController extends Controller
     public function index()
     {
         //
-        return view('products.index');  
+        $products = Product::all();
+
+        return view('products.index', compact('products'));  
     }
 
     /**
@@ -30,6 +33,17 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'product_name' => 'required|string|max:255',
+            'product_category' => 'required|string|max:255',
+            'product_price' => 'required|numeric|min:0',
+            'product_stock' => 'required|integer|min:0',
+            'product_description' => 'nullable|string',
+        ]);
+
+        Product::create($request->all());
+
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     /**

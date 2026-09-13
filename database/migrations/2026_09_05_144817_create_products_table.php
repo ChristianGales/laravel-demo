@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('product_name');
+            $table->enum('product_category', ['Electronics', 'Clothing', 'Books', 'Home & Kitchen']);
+            $table->enum('product_status', ['In Stock', 'Out of Stock', 'Low Stock']);
+            $table->decimal('product_price', 8, 2);
+            $table->string('product_description')->nullable();
             $table->timestamps();
         });
     }

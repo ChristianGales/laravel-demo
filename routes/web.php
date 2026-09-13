@@ -8,17 +8,17 @@ Route::get('/', function () {
 })->name('home');
 
 // Product Routes / Now using ProductController
-// Route::get('/products', function () {
-//     return view('products.index');
-// })->name('products.index');
+Route::get('/products', function () {
+    return view('products.index');
+})->name('products.index');
 
-// Route::get('/products/create', function () {
-//     return view('products.add-product');
-// })->name('products.create');
+Route::get('/products/create', function () {
+    return view('products.add-product');
+})->name('products.create');
 
-// Route::get('/products/edit', function () {
-//     return view('products.edit-product');
-// })->name('products.edit');
+Route::get('/products/edit', function () {
+    return view('products.edit-product');
+})->name('products.edit');
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');

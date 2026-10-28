@@ -3,7 +3,7 @@
 @section('title', 'Products')
 
 @section('content')
-    <div x-data="{ showDeleteModal: false, productToDelete: null }">
+    <div x-data="{ showDeleteModal: false, productName: '', deleteUrl: '' }">
 
         <div class="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
@@ -27,6 +27,7 @@
                 class="w-full rounded-lg border border-slate-300 px-4 py-2 outline-none focus:border-blue-500 sm:max-w-sm">
         </div>
 
+        {{-- Add Resource --}}
         <!-- Success | Error Message -->
         @if (session('success'))
             <div
@@ -49,6 +50,7 @@
             </div>
         @endif
 
+        {{-- Fetch Resource --}}
         {{-- Product Table --}}
         <div class="overflow-x-auto rounded-lg border border-slate-200">
             <table class="w-full text-left text-sm">
@@ -64,9 +66,7 @@
                 </thead>
 
                 <tbody class="divide-y divide-slate-200">
-
                     @forelse ($products as $product)
-
                         <tr class="hover:bg-slate-50">
                             <td class="px-5 py-4 font-medium">
                                 {{ $product->product_name }}
@@ -83,7 +83,6 @@
                             <td class="px-5 py-4">
                                 {{ $product->product_stock }}
                             </td>
-
                             <td class="px-5 py-4">
                                 @if ($product->product_stock == 0)
                                     <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
@@ -104,69 +103,77 @@
 
                             <td class="px-5 py-4">
                                 <div class="flex justify-center gap-2">
-                                    <a href="#" class="text-blue-600 hover:underline">
+                                    <a href="{{ route('products.edit', $product) }}" class="text-blue-600 hover:underline">
                                         Edit
                                     </a>
 
                                     <button
                                         type="button"
-                                        @click="showDeleteModal = true; productToDelete = '{{ $product->product_name }}'"
+                                        @click="
+                                            showDeleteModal = true;
+                                            productName = @js($product->product_name);
+                                            deleteUrl = @js(route('products.destroy', $product));
+                                        "
                                         class="text-red-600 hover:underline">
                                         Delete
                                     </button>
                                 </div>
                             </td>
                         </tr>
-
                     @empty
-
                         <tr>
                             <td colspan="5" class="px-5 py-8 text-center text-slate-500">
                                 No products found.
                             </td>
                         </tr>
-
                     @endforelse
-
                 </tbody>
             </table>
         </div>
 
         {{-- Delete Confirmation Modal --}}
+        
         <div
             x-show="showDeleteModal"
             x-cloak
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
-            style="display: none;">
-
+            @keydown.escape.window="showDeleteModal = false"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+        >
             <div
-                x-show="showDeleteModal"
-                @click.away="showDeleteModal = false"
-                x-transition
-                class="w-full max-w-sm rounded-lg bg-white p-6 shadow-xl">
+                @click.outside="showDeleteModal = false"
+                class="w-full max-w-md rounded-xl bg-white p-6 shadow-lg"
+            >
+                <h2 class="text-lg font-semibold text-gray-900">
+                    Confirm Deletion
+                </h2>
 
-                <h3 class="text-lg font-semibold text-slate-800">Delete Product</h3>
-                <p class="mt-2 text-sm text-slate-500">
+                <p class="mt-2 text-sm text-gray-600">
                     Are you sure you want to delete
-                    <span class="font-medium text-slate-700" x-text="productToDelete"></span>?
-                    This action cannot be undone.
+                    <strong x-text="productName"></strong>?
                 </p>
 
                 <div class="mt-6 flex justify-end gap-3">
                     <button
                         type="button"
                         @click="showDeleteModal = false"
-                        class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+                        class="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100">
                         Cancel
                     </button>
-                    <button
-                        type="button"
-                        @click="showDeleteModal = false"
-                        class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700">
-                        Delete
-                    </button>
+
+                    <form :action="deleteUrl" method="POST">
+                        @csrf
+                        @method('DELETE')
+
+                        <button
+                            type="submit"
+                            class="rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700">
+                            Delete
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
+
+
+        
 @endsection

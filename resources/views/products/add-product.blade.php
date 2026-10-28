@@ -11,6 +11,7 @@
     </div>
 
     <div class="w-full rounded-lg border border-slate-200 bg-white p-6">
+        <!-- add resource -->
         <form action="{{ route('products.store') }}" method="POST" class="space-y-5">
 
             @csrf
@@ -50,25 +51,11 @@
 
                         <option value="">Select category</option>
 
-                        <option value="Electronics"
-                            {{ old('product_category') == 'Electronics' ? 'selected' : '' }}>
-                            Electronics
-                        </option>
-
-                        <option value="Clothing"
-                            {{ old('product_category') == 'Clothing' ? 'selected' : '' }}>
-                            Clothing
-                        </option>
-
-                        <option value="Books"
-                            {{ old('product_category') == 'Books' ? 'selected' : '' }}>
-                            Books
-                        </option>
-
-                        <option value="Home & Kitchen"
-                            {{ old('product_category') == 'Home & Kitchen' ? 'selected' : '' }}>
-                            Home & Kitchen
-                        </option>
+                        @foreach (['Electronics', 'Clothing', 'Books', 'Home & Kitchen'] as $category)
+                            <option value="{{ $category }}" @selected(old('product_category') === $category)>
+                                {{ $category }}
+                            </option>
+                        @endforeach
 
                     </select>
 
